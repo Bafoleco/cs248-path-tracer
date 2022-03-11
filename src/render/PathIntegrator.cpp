@@ -27,7 +27,6 @@ Light sampleIncomingLight(Scene *scene, Object* object, Vec3 hitPos, Vec3 outgoi
     object->getReflectionInfo(&reflectionInfo, hitPos);
 
     if (scene->is_obstructed(hitPos, lightSampleInfo.sourcePos)) {
-//        printf("obstructed\n");
         return Light(0, 0, 0);
     }
 
@@ -61,16 +60,9 @@ Light PathIntegrator::sample(Scene *scene, const Ray initial) {
     Ray ray(initial.pos, initial.dir);
     while (bounces < MAX_BOUNCES) {
         //Intersect ray with scene
-//        if (lastHitObj && lastHitObj->getName() == "bottom") {
-//            double radius = incomingSample.incoming.norm();
-//        }
         scene->find_closest_hit(&ray, &hi);
         Object* hit_object = hi.object;
         Vec3 hitPos = ray.posAt(hi.t);
-
-        if(hit_object && hit_object->getName() == "mirror" && bounces == 0) {
-            double mirror = 0;
-        }
 
         //Possibly add emitted light at intersection
 
@@ -97,7 +89,15 @@ Light PathIntegrator::sample(Scene *scene, const Ray initial) {
 
         lastHitObj = hit_object;
 
-        //russian roulette???
+        //russian roulette
+        if (bounces > 3) {
+            double q = std::max(0.05, 1 - beta[1]);
+            if (rand_double() < q) {
+                break;
+            }
+            beta /= 1 - q;
+        }
+
         bounces++;
     }
 

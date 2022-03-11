@@ -10,21 +10,20 @@ Specular::Specular(const Color &color) : color(color) {}
 
 void Specular::sampleReflection(BSDFSampleInfo *bsdfSampleInfo, bool flipped_normal) const {
     Vec3 outgoing = bsdfSampleInfo->outgoing;
-    double theta = acos(outgoing[2]);
-    double phi = atan(outgoing[0] / outgoing[1]);
+    Vec3 oSpherical = toSpherical(outgoing);
+
+    double theta = oSpherical[0];
+    double phi = oSpherical[1];
 
     if (!std::isfinite(phi)) {
         phi = 0;
         printf("bad phi\n");
     }
 
-    double newTheta = theta;
-    double newPhi = phi + PI;
-
-    Vec3 incoming = toCartesian(Vec3(newTheta, newPhi, 1));
+    Vec3 incoming = toCartesian(Vec3(theta, phi + PI, 1));
     bsdfSampleInfo->incoming = incoming;
     bsdfSampleInfo->density = 1;
-    bsdfSampleInfo->reflectivity = color;
+    bsdfSampleInfo->reflectivity = color / std::abs(cos(theta));
     bsdfSampleInfo->delta = true;
 }
 

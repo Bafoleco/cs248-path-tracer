@@ -5,7 +5,7 @@
 #include "Bvh.h"
 #include "../constants.h"
 
-#define C_TRAV 120
+#define C_TRAV 300
 #define C_ISECT 50
 
 Bvh::Bvh(std::vector<Object*> objects) : objects(objects) {

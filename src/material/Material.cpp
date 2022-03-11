@@ -13,3 +13,5 @@ BSDF *Material::getBsdf() const {
 }
 
 Material::Material(const Color &emittance, BSDF *bsdf) : emittance(emittance), bsdf(bsdf) {}
+
+Material::Material(BSDF *bsdf) : bsdf(bsdf) {}

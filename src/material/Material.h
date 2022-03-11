@@ -15,6 +15,8 @@ public:
 
     Material(const Color &emittance, BSDF *bsdf);
 
+    Material(BSDF *bsdf);
+
     const Color &getEmittance() const;
 
     Vec3 sampleIncomingDir(Vec3 outgoingDir, Vec3 normal);

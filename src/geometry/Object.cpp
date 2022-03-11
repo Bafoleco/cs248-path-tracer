@@ -53,6 +53,10 @@ void Object::sampleReflection(BSDFSampleInfo *bsdfSampleInfo, Vec3 &hitPos) {
     bsdfSampleInfo->outgoing = normal2World * bsdfSampleInfo->outgoing;
 
 //    assert(bsdfSampleInfo->incoming.dot(samesideNormal) > 0);
+
+//    printf("comp in n: %f, %f\n", bsdfSampleInfo->incoming.dot(normal), bsdfSampleInfo->outgoing.dot(normal));
+
+
 }
 
 void Object::getReflectionInfo(BSDFSampleInfo *bsdfSampleInfo, Vec3 &hitPos) {
