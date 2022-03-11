@@ -4,12 +4,12 @@
 
 #include "Material.h"
 
-Vec3 Material::sampleIncomingDir(Vec3 outgoingDir, Vec3 normal) {
-    return Vec3();
-}
-
-Material::Material(const Color &emittance) : emittance(emittance) {}
-
 const Color &Material::getEmittance() const {
     return emittance;
 }
+
+BSDF *Material::getBsdf() const {
+    return bsdf;
+}
+
+Material::Material(const Color &emittance, BSDF *bsdf) : emittance(emittance), bsdf(bsdf) {}

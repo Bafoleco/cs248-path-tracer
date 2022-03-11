@@ -14,19 +14,19 @@
 
 class Scene {
 public:
-    Scene(const std::vector<Object*> &objects);
-    Scene(const std::vector<Object*> &objects, Camera camera);
+    Scene(const std::vector<Object*> &objects, std::vector<LightSource*> lights, Camera camera);
+
+    const Camera &getCamera() const;
 
     void printBvh();
-    void render();
     void find_closest_hit(Ray* ray, hit_info* closest);
-
-    const std::vector<PointLight> &getLights() const;
+    bool is_obstructed(Vec3 a, Vec3 b);
+    const std::vector<LightSource*> &getLights() const;
 
 private:
         Camera camera;
         std::vector<Object*> objects;
-        std::vector<PointLight> lights;
+        std::vector<LightSource*> lights;
         Bvh* bvh;
 };
 

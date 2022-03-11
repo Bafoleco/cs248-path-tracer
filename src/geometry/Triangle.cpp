@@ -37,7 +37,7 @@ Vec3 Triangle::getNormal(Vec3 pos) const {
     return normal;
 }
 
-Triangle::Triangle(const Vec3 &p0, const Vec3 &p1, const Vec3 &p2, Material &material) : Object(pos, material),
+Triangle::Triangle(const Vec3 &p0, const Vec3 &p1, const Vec3 &p2, Material &material) : Object(pos, material, ""),
                                                                                                           p0(p0),
                                                                                                           p1(p1),
                                                                                                           p2(p2) {

@@ -7,10 +7,15 @@
 
 
 #include "../types.h"
+#include "LightSource.h"
 
-class PointLight {
+class PointLight : public LightSource {
 public:
     PointLight(const Vec3 &pos, const Color &color, double intensity);
+
+    bool isDeltaLight() override;
+
+    void sampleLight(LightSampleInfo *lightSampleInfo, Vec3 pos) override;
 
     Vec3 pos;
     Color color;

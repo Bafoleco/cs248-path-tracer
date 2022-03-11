@@ -7,15 +7,23 @@
 
 #include "../types.h"
 
+struct BSDFSampleInfo {
+    Vec3 outgoing;
+    Vec3 incoming;
+    double density;
+    Color reflectivity;
+    bool delta;
+};
+
 class BSDF {
 
 public:
     /*
      * We will operate in the frame of reference of the surface, where z is the surface normal
-     *
      */
-    virtual Vec3 sampleOutgoingGivenIncoming(Vec3 incoming) const = 0;
-    virtual Vec3 sampleIncomingGivenOutgoing(Vec3 outgoing) const = 0;
+    virtual void sampleReflection(BSDFSampleInfo *bsdfSampleInfo, bool flipped_normal) const = 0;
+    virtual void getReflectionInfo(BSDFSampleInfo *bsdfSampleInfo, bool flipped_normal) const = 0;
+
     virtual ~BSDF();
 
 private:

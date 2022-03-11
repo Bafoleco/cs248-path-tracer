@@ -15,7 +15,7 @@ Vec3 Sphere::getMinCords() const {
     return minCords;
 }
 
-Sphere::Sphere(const Vec3 &pos, double radius, Material &material) : Object(pos, material), radius(radius) {}
+Sphere::Sphere(const Vec3 &pos, double radius, Material &material, std::string name) : Object(pos, material, name), radius(radius) {}
 
 double Sphere::intersect(Ray *ray) const {
     Vec3 origin = ray->pos;

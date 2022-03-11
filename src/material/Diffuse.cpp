@@ -3,14 +3,29 @@
 //
 
 #include "Diffuse.h"
+#include "../util.h"
+#include "../constants.h"
 
-Vec3 Diffuse::sampleOutgoingGivenIncoming(Vec3 incoming) const {
-//    return BSDF::sampleOutgoingGivenIncoming(incoming);
-    return Vec3(0, 0, 0);
+void Diffuse::sampleReflection(BSDFSampleInfo *bsdfSampleInfo, bool flipped_normal) const {
+    //randomly sampleReflection direction in hemisphere
+    double phi = rand_double() * 2 * PI;
+    double theta = acos(rand_double());
+//    Vec3 rand_dir = Vec3(sin(theta) * cos(phi), sin(theta) * sin(phi), cos(theta));
+    Vec3 rand_dir = toCartesian(Vec3(theta, phi, 1));
+
+    bsdfSampleInfo->incoming = rand_dir;
+    //set probability density
+    bsdfSampleInfo->density = 1.0 / (2 * PI);
+    //set reflectivity
+    bsdfSampleInfo->reflectivity = color;
+
+    bsdfSampleInfo->delta = false;
 }
 
-Vec3 Diffuse::sampleIncomingGivenOutgoing(Vec3 outgoing) const {
-//    return BSDF::sampleIncomingGivenOutgoing(outgoing);
+Diffuse::Diffuse(const Color &color) : color(color) {}
 
-    return Vec3(0, 0, 0);
+void Diffuse::getReflectionInfo(BSDFSampleInfo *bsdfSampleInfo, bool flipped_normal) const {
+    bsdfSampleInfo->density = 1.0 / (2 * PI);
+    bsdfSampleInfo->reflectivity = color;
+    bsdfSampleInfo->delta = false;
 }

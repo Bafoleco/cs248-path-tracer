@@ -3,7 +3,9 @@
 //
 
 #include "Scene.h"
-#include<opencv2/opencv.hpp>
+#include "../render/PathIntegrator.h"
+#include "../util.h"
+#include "../constants.h"
 #include<iostream>
 
 void find_closest_hit_r(Bvh* bvh, Ray *ray, hit_info *closest) {
@@ -13,7 +15,7 @@ void find_closest_hit_r(Bvh* bvh, Ray *ray, hit_info *closest) {
     if(bvh->isLeaf()) {
         for (auto &o : bvh->getObjects()) {
             double t = o->intersect(ray);
-            if (t >= 0 && t < closest->t) {
+            if (t > 0 + EPS && t < closest->t) {
                 closest->t = t;
                 closest->object = o;
             }
@@ -37,11 +39,51 @@ void find_closest_hit_r(Bvh* bvh, Ray *ray, hit_info *closest) {
     }
 }
 
+bool is_obstructed_r(Bvh* bvh, Vec3 a, Vec3 b) {
+    Ray ray(a, (b-a).normalized());
+    if(bvh->isLeaf()) {
+        for (auto &o : bvh->getObjects()) {
+            double t = o->intersect(&ray);
+            if (t >= 0 && t <= (b-a).norm()) {
+//                printf("%f \n", t);
+//                printf("-----\n");
+//                std::cout << ray.posAt(t) << std::endl;
+//                double huh = (b-a).norm();
+                return true;
+            }
+        }
+        return false;
+    } else {
+        bbox_isect_info hit1 = bvh->getA()->intersect(&ray);
+        bbox_isect_info hit2 = bvh->getB()->intersect(&ray);
+
+        if (hit1.hit && hit2.hit) {
+            return is_obstructed_r(bvh->getA(), a, b) || is_obstructed_r(bvh->getB(), a, b);
+        } else if(hit1.hit) {
+            return is_obstructed_r(bvh->getA(), a, b);
+        } else if(hit2.hit) {
+            return is_obstructed_r(bvh->getB(), a, b);
+        }
+    }
+    return false;
+}
+
+bool Scene::is_obstructed(Vec3 a, Vec3 b) {
+    Vec3 dir = (b-a).normalized();
+    a = a + dir * EPS;
+    b = b - dir * EPS;
+
+    return is_obstructed_r(bvh, a, b);
+}
+
 void Scene::find_closest_hit(Ray *ray, hit_info *closest) {
+    closest->t = 10000;
+    closest->object = nullptr;
     find_closest_hit_r(bvh, ray, closest);
 }
 
-Scene::Scene(const std::vector<Object*> &objects, Camera camera) : objects(objects), camera(camera) {
+Scene::Scene(const std::vector<Object*> &objects, std::vector<LightSource*> lights, Camera camera) :
+    objects(objects), lights(std::move(lights)), camera(camera) {
     bvh = new Bvh(objects);
 }
 
@@ -49,43 +91,10 @@ void Scene::printBvh() {
     bvh->printBVH();
 }
 
-
-
-cv::Vec3b rgbFromColor(Color c) {
-    return cv::Vec3b(c[2] * 255, c[1] * 255, c[0] * 255);
-}
-
-void Scene::render() {
-
-    int num_cols = camera.getNumCols();
-    int num_rows = camera.getNumRows();
-    cv::Mat render(num_rows, num_cols, CV_8UC3);
-    for (int i = 0; i < num_rows; i++) {
-        if (i % 5 == 0) {
-            printf("row %d\n", i);
-        }
-        for (int j = 0; j < num_cols; j++) {
-            Vec3 ray_dir = camera.getPixelDir(j + 0.5, i + 0.5);
-            Ray r(camera.getPos(), ray_dir);
-
-            hit_info hi = hit_info();
-            find_closest_hit(&r, &hi);
-
-            if (hi.object != nullptr) {
-                render.at<cv::Vec3b>(i,j) = (2.0 / (hi.t + 1)) * rgbFromColor(hi.object->getMaterial(Vec3()).getEmittance());
-            }
-        }
-    }
-
-    namedWindow("render output",cv::WINDOW_AUTOSIZE);
-    cv::imshow("render output", render);
-
-    cv::waitKey(0);
-    cv::destroyWindow("render output");
-    imwrite("render.jpg", render);
-
-}
-
-const std::vector<PointLight> &Scene::getLights() const {
+const std::vector<LightSource*> &Scene::getLights() const {
     return lights;
+}
+
+const Camera &Scene::getCamera() const {
+    return camera;
 }

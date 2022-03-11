@@ -5,7 +5,7 @@
 #include "Bvh.h"
 #include "../constants.h"
 
-#define C_TRAV 20
+#define C_TRAV 120
 #define C_ISECT 50
 
 Bvh::Bvh(std::vector<Object*> objects) : objects(objects) {
@@ -201,10 +201,7 @@ int getConstAxis(int axis1, int axis2) {
     if (axis1 != Y && axis2 != Y) {
         return Y;
     }
-    if (axis1 != Z && axis2 != Z) {
-        return Z;
-    }
-    return 0;
+    return Z;
 }
 
 
@@ -220,35 +217,10 @@ rectangle_hit get_plane_intersect(Ray* ray, int axis1, int axis2, bool is_low, V
     assert(axis1 != axis2);
 
     //constant axis
-    int constAxis = getConstAxis(axis1,axis2);
+    int constAxis = getConstAxis(axis1, axis2);
     double constCoord = (is_low) ? minCoords[constAxis] : maxCoords[constAxis];
 
-//    Vec3 p0(minCoords[axis1], minCoords[axis2], constCoord);
-
-    Vec3 p0;
-    p0[axis1] = minCoords[axis1];
-    p0[axis2] = minCoords[axis2];
-    p0[constAxis] = constCoord;
-    Vec3 p1;
-    p1[axis1] = maxCoords[axis1];
-    p1[axis2] = minCoords[axis2];
-    p1[constAxis] = constCoord;
-    Vec3 p2;
-    p2[axis1] = minCoords[axis1];
-    p2[axis2] = maxCoords[axis2];
-    p2[constAxis] = constCoord;
-    Vec3 p3;
-    p3[axis1] = maxCoords[axis1];
-    p3[axis2] = maxCoords[axis2];
-    p3[constAxis] = constCoord;
-
-    Vec3 basis1 = (p1 - p0);
-    Vec3 basis2 = (p2 - p0);
-    Vec3 normal = basis1.cross(basis2);
-
-    double c = normal.dot(p3);
-
-    double t = (c - normal.dot(ray->pos)) / (normal.dot(ray->dir));
+    double t = (constCoord - ray->pos[constAxis]) / (ray->dir[constAxis]);
     if (!std::isfinite(t)) {
         return {false, 0};
     }
@@ -275,7 +247,7 @@ bbox_isect_info Bvh::intersect(Ray *ray) {
 
     //find closet Ray plane intersection
     for (int i = X; i <= Z; i++) {
-        for (int j = X; i <= Z; i++) {
+        for (int j = X; j <= Z; j++) {
             if (i != j) {
                 bool is_low = (i < j);
                 rectangle_hit rh = get_plane_intersect(ray, i, j, is_low, bbox.first, bbox.second);

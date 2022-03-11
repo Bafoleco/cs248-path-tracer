@@ -12,8 +12,14 @@
 
 class Diffuse : public BSDF {
 public:
-    Vec3 sampleOutgoingGivenIncoming(Vec3 incoming) const override;
-    Vec3 sampleIncomingGivenOutgoing(Vec3 outgoing) const override;
+    Diffuse(const Color &color);
+
+    void sampleReflection(BSDFSampleInfo *bsdfSampleInfo, bool flipped_normal) const override;
+
+    void getReflectionInfo(BSDFSampleInfo *bsdfSampleInfo, bool flipped_normal) const override;
+
+private:
+    Color color;
 };
 
 

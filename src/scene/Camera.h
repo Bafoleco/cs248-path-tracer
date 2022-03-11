@@ -11,8 +11,7 @@
 
 class Camera {
 public:
-    Camera(Vec3 pos, const Vec3 &dir, double vfov, double hfov, double nearClip,
-           int numCols, int numRows);
+    Camera(Vec3 pos, const Vec3 &dir, double hfov, double nearClip, int numCols, int numRows);
 
     int getNumCols() const;
     int getNumRows() const;

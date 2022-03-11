@@ -8,6 +8,8 @@
 #define X 0
 #define Y 1
 #define Z 2
+#define PI M_PI
+#define EPS 0.001
 
 const Vec3 ORIGIN(0, 0, 0);
 

@@ -15,7 +15,7 @@ public:
     double intersect(Ray *ray) const override;
     Vec3 getNormal(Vec3 pos) const override;
 
-    Sphere(const Vec3 &pos, double radius, Material &material);
+    Sphere(const Vec3 &pos, double radius, Material &material, std::string name);
 
 private:
     double radius;

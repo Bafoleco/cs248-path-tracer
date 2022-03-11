@@ -10,14 +10,20 @@
 
 class Plane : public Object {
 public:
-    Plane(const Vec3 &p0, const Vec3 &p1, const Vec3 &p2, const Vec3 &p3, Material &material);
+    Plane(const Vec3 &p0, const Vec3 &p1, const Vec3 &p2, const Vec3 &p3, Material &material, std::string name);
 
     Vec3 getMinCords() const override;
     Vec3 getMaxCords() const override;
     double intersect(Ray *ray) const override;
     Vec3 getNormal(Vec3 pos) const override;
+    Vec3 getRandomPoint();
+    double getArea() const;
 
 private:
+    Vec3 p0;
+    Vec3 p1;
+    Vec3 p2;
+    Vec3 p3;
 
     Vec3 normal;
     double c;

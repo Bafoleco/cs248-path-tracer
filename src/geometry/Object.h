@@ -11,9 +11,16 @@
 
 class Object {
 public:
+    Object(Vec3 pos, Material &material, std::string name);
+
+    const std::string &getName() const;
+
     Vec3 getPos() const;
     void setPos(const Vec3 &pos);
     Material getMaterial(Vec3 pos);
+
+    void sampleReflection(BSDFSampleInfo* bsdfSampleInfo, Vec3 &hitPos);
+    void getReflectionInfo(BSDFSampleInfo* bsdfSampleInfo, Vec3 &hitPos);
 
     virtual Vec3 getMinCords() const = 0;
     virtual Vec3 getMaxCords() const = 0;
@@ -24,8 +31,8 @@ private:
     Material& material;
 
 protected:
+    std::string name;
     Vec3 pos;
-    Object(Vec3 pos, Material &material);
 };
 
 

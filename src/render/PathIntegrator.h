@@ -5,15 +5,14 @@
 #ifndef PATH_TRACER_PATHINTEGRATOR_H
 #define PATH_TRACER_PATHINTEGRATOR_H
 
-
-#include "types.h"
-#include "scene/Bvh.h"
-#include "scene/Scene.h"
+#include "../types.h"
+#include "../scene/Bvh.h"
+#include "../scene/Scene.h"
 
 class PathIntegrator {
 
 public:
-    Color sample(Scene scene, Ray* ray);
+    static Color sample(Scene *scene, const Ray ray) ;
 };
 
 

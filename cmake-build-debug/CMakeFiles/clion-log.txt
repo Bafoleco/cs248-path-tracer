@@ -1,4 +1,4 @@
-/private/var/folders/9p/q6gwr3fj32n_0341gwftk8y00000gn/T/AppTranslocation/5CA394C7-1E4C-47B9-98DA-3A7D07CC59FC/d/CLion.app/Contents/bin/cmake/mac/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=/private/var/folders/9p/q6gwr3fj32n_0341gwftk8y00000gn/T/AppTranslocation/5CA394C7-1E4C-47B9-98DA-3A7D07CC59FC/d/CLion.app/Contents/bin/ninja/mac/ninja -G Ninja /Users/bayfoleycox/cs248/path-tracer
+/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=/Applications/CLion.app/Contents/bin/ninja/mac/ninja -G Ninja /Users/bayfoleycox/cs248/path-tracer
 -- Configuring done
 -- Generating done
 -- Build files have been written to: /Users/bayfoleycox/cs248/path-tracer/cmake-build-debug

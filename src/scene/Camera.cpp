@@ -11,9 +11,7 @@
 Vec3 Camera::getPixelDir(double x, double y) {
     double normX = (x - (double) num_cols / 2) / num_cols;
     double normY = (y - (double) num_rows / 2) / num_rows;
-    Vec3 ray = (dir * near_clip + normX * xAxis * width + normY * yAxis * height).normalized();
-
-    return ray;
+    return (dir * near_clip + normX * xAxis * width + normY * yAxis * height).normalized();
 }
 
 int Camera::getNumCols() const {
@@ -24,9 +22,13 @@ int Camera::getNumRows() const {
     return num_rows;
 }
 
-Camera::Camera(Vec3 pos, const Vec3 &dir, double vfov, double hfov, double nearClip,
-               int numCols, int numRows) : pos(std::move(pos)), dir(dir), near_clip(nearClip),
-                                           num_cols(numCols), num_rows(numRows) {
+Camera::Camera(Vec3 pos, const Vec3 &dir, double hfov, double nearClip, int numCols, int numRows)
+        : pos(std::move(pos)), dir(dir.normalized()), near_clip(nearClip),
+          num_cols(numCols), num_rows(numRows) {
+
+
+    double aspectRatio = (double) numCols / numRows;
+    double vfov = 2 * atan(tan(hfov / 2) * (1/aspectRatio));
 
     width = tan(hfov / 2) * near_clip;
     height = tan(vfov / 2) * near_clip;
