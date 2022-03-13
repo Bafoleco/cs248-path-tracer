@@ -56,7 +56,6 @@ Light PathIntegrator::sample(Scene *scene, const Ray initial) {
     Light light(0, 0, 0);
     int bounces = 0;
 
-    Object* lastHitObj = nullptr;
     Ray ray(initial.pos, initial.dir);
     while (bounces < MAX_BOUNCES) {
         //Intersect ray with scene
@@ -86,8 +85,6 @@ Light PathIntegrator::sample(Scene *scene, const Ray initial) {
 
         ray.pos = hitPos;
         ray.dir = nextRayDir;
-
-        lastHitObj = hit_object;
 
         //russian roulette
         if (bounces > 3) {

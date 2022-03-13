@@ -12,7 +12,7 @@ class Renderer {
 public:
     Renderer(Scene *scene);
 
-    void render(int num_threads, int num_samples, bool display);
+    void render(int num_threads, int num_samples, bool display, std::string filename);
 private:
     Scene* scene;
 

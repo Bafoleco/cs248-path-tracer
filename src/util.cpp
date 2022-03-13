@@ -2,11 +2,14 @@
 // Created by Bay Foley-Cox on 3/7/22.
 //
 
+#include <random>
 #include "util.h"
 #include "constants.h"
 
 double rand_double() {
-    return ((double) rand() / (RAND_MAX));
+    static thread_local std::mt19937 generator;
+    std::uniform_real_distribution<> dist(0, 1);
+    return dist(generator);
 }
 
 cv::Vec3b rgbFromColor(Color c) {

@@ -67,6 +67,9 @@ void Object::getReflectionInfo(BSDFSampleInfo *bsdfSampleInfo, Vec3 &hitPos) {
     Eigen::Matrix3d normal2World = constructNormal2World(samesideNormal);
     Eigen::Matrix3d world2Normal = normal2World.inverse();
 
+
+    assert(normal2World.determinant() < 1.01 || normal2World.determinant() > 0.999);
+
     //transform outgoing and incoming
     bsdfSampleInfo->outgoing = world2Normal * bsdfSampleInfo->outgoing;
     bsdfSampleInfo->incoming = world2Normal * bsdfSampleInfo->incoming;

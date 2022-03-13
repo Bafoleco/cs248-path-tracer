@@ -15,6 +15,7 @@ public:
    static void testTransmission();
    static void classicScene();
    static void testFresnel();
+   static void testFresnelCornell();
 
 private:
 

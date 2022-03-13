@@ -20,6 +20,7 @@ Diffuse diffuseBlue(Color(0.1, 0.1, .9));
 Diffuse diffuseBlack(Color(0.01, 0.01, 0.01));
 Diffuse diffuseGreen(Color(0.1, 0.9, 0.1));
 Diffuse diffuseWhite(Color(.5, .5, .5));
+Diffuse diffusePurple(Color(.5, .5, .5));
 
 Material m1 = Material(Vec3(1,0,0), &diffuseWhite);
 Material m2 = Material(Vec3(0,0,1), &diffuseBlue);
@@ -27,14 +28,12 @@ Material green = Material(Vec3(0,0,1), &diffuseGreen);
 Material white = Material(Vec3(0,0,1), &diffuseWhite);
 Material red = Material(Vec3(0,0,1), &diffuseRed);
 Material blue = Material(&diffuseBlue);
+Material purple = Material(&diffusePurple);
 
 Specular specular(Color(1, 1, 1));
 Material specularMat = Material(Vec3(0,0,1), &specular);
 Transparent transparent(Color(1, 1, 1), 3);
 Material transparentMat = Material(Vec3(1,0,0), &transparent);
-
-Fresnel fresnel(1.5, Color(1,1,1));
-Material glass(&fresnel);
 
 void TestScenes::testSpecular() {
 
@@ -79,7 +78,7 @@ void TestScenes::testSpecular() {
     Scene scene(objects, lights, camera);
 
     Renderer renderer(&scene);
-    renderer.render(6,  200, true);
+    renderer.render(6, 200, true, "render.jpg");
 }
 
 
@@ -123,7 +122,7 @@ void TestScenes::testTransmission() {
     Scene scene(objects, lights, camera);
 
     Renderer renderer(&scene);
-    renderer.render(6,  100, true);
+    renderer.render(6, 100, true, "render.jpg");
 }
 
 void TestScenes::classicScene() {
@@ -171,7 +170,7 @@ void TestScenes::classicScene() {
 
 
     Renderer renderer(&scene);
-    renderer.render(6,  100, true);
+    renderer.render(6, 400, true, "render.jpg");
 }
 
 void TestScenes::testFresnel() {
@@ -199,12 +198,16 @@ void TestScenes::testFresnel() {
     Sphere a(Vec3(-0.6, 1.2, 0.5), 0.4, green, "");
     Sphere b(Vec3(0, 1, 0.2), 0.2, red, "");
     Sphere c(Vec3(-0.7, 0.4, 0.4), 0.2, blue, "");
+    Sphere d(Vec3(0, -0.4, 0.4), 0.2, purple, "");
 
+    Fresnel fresnel(1.5, Color(1,1,1));
+    Material glass(&fresnel);
     Sphere transparentS(Vec3(0, 0.5, 0.5), 0.3, glass, "transparent");
 
     objects.push_back(&a);
     objects.push_back(&b);
-    objects.push_back(&c);
+//    objects.push_back(&c);
+//    objects.push_back(&d);
     objects.push_back(&transparentS);
 
     PointLight pointLight(Vec3(0, 0.4, 1), Color(1, 1, 1), 0.2);
@@ -216,5 +219,50 @@ void TestScenes::testFresnel() {
     Scene scene(objects, lights, camera);
 
     Renderer renderer(&scene);
-    renderer.render(6,  50, true);
+    renderer.render(6, 1000, true, "fresnel.jpg");
+}
+
+void TestScenes::testFresnelCornell() {
+    double s = 2;
+
+    std::vector<Object*> objects;
+
+    //constant z
+    Plane p0(Vec3(-1 * s, 0, 0), Vec3(-1 * s, s, 0), Vec3(s, 0, 0), Vec3(s, s, 0), white, "bottom");
+    Plane p1(Vec3(-1 * s, 0, s), Vec3(-1 * s, s, s), Vec3(s, 0, s), Vec3(s, s, s), white, "top");
+    //constant x
+    Plane p2(Vec3(-1 * s, 0, 0), Vec3(-1*s, 0, s), Vec3(-1*s, s, 0), Vec3(-1*s, s, s), white, "left");
+    Plane p3(Vec3(s, 0, 0), Vec3(s, 0, s), Vec3(s, s, 0), Vec3(s, s, s), white, "right");
+    //constant y
+    Plane p4(Vec3(-1 * s, 0, 0), Vec3(-1 * s, 0, s), Vec3(s, 0, 0), Vec3(s, 0, s), white, "back");
+    Plane p5(Vec3(-1 * s, s, 0), Vec3(-1 * s, s, s), Vec3(s, s, 0), Vec3(s, s, s), white, "front");
+
+    objects.push_back(&p0);
+    objects.push_back(&p1);
+    objects.push_back(&p2);
+    objects.push_back(&p3);
+    objects.push_back(&p4);
+    objects.push_back(&p5);
+
+    Sphere a(Vec3(-0.4, 1.7, 0.3), 0.3, green, "");
+    Sphere b(Vec3(0.4, 1.7, 0.3), 0.3, red, "");
+
+    Fresnel fresnel(3.5, Color(1,1,1));
+    Material glass(&fresnel);
+    Sphere transparentS(Vec3(0, 1.4, 0.25), 0.25, glass, "transparent");
+
+    objects.push_back(&a);
+    objects.push_back(&b);
+    objects.push_back(&transparentS);
+
+    PointLight pointLight(Vec3(0, 0.4, 1), Color(1, 1, 1), 0.15);
+    std::vector<LightSource*> lights;
+    lights.push_back(&pointLight);
+
+    Camera camera(Vec3(0, 0.5, 0.7), Vec3(0, 1, -0.1), 160 * ((2 * PI) / 360), 1, 1200, 600);
+
+    Scene scene(objects, lights, camera);
+
+    Renderer renderer(&scene);
+    renderer.render(6, 50, true, "fresnel.jpg");
 }

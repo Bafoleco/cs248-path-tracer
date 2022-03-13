@@ -22,11 +22,10 @@ double Triangle::intersect(Ray *ray) const {
     Vec3 collisionPos = ray->posAt(t);
     Vec3 collisionInTri = (collisionPos - p0);
 
-    double A = basis1.cross(basis2).dot(normal);
-    double alpha = basis1.cross(collisionInTri).dot(normal) / A;
-    double beta = -1 * basis2.cross(collisionInTri).dot(normal) / A;
+    double alpha = basis1.cross(collisionInTri).dot(normal);
+    double beta = collisionInTri.cross(basis2).dot(normal);
 
-    if (alpha >= 0 && beta >= 0 && alpha + beta < 1) {
+    if (alpha >= 0 && beta >= 0 && (alpha + beta) / (basis1.cross(basis2).dot(normal)) < 1) {
         return t;
     }
 

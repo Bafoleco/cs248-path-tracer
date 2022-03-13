@@ -22,10 +22,9 @@ int Camera::getNumRows() const {
     return num_rows;
 }
 
-Camera::Camera(Vec3 pos, const Vec3 &dir, double hfov, double nearClip, int numCols, int numRows)
-        : pos(std::move(pos)), dir(dir.normalized()), near_clip(nearClip),
+Camera::Camera(Vec3 pos, const Vec3 &viewDir, double hfov, double nearClip, int numCols, int numRows)
+        : pos(std::move(pos)), dir(viewDir.normalized()), near_clip(nearClip),
           num_cols(numCols), num_rows(numRows) {
-
 
     double aspectRatio = (double) numCols / numRows;
     double vfov = 2 * atan(tan(hfov / 2) * (1/aspectRatio));

@@ -33,7 +33,7 @@ void renderThread(cv::Mat* image, Scene* scene, int num_rows, int num_cols, int 
 
 }
 
-void Renderer::render(int num_threads, int num_samples, bool display) {
+void Renderer::render(int num_threads, int num_samples, bool display, std::string filename) {
 
     auto start = std::chrono::high_resolution_clock::now();
     Camera camera = scene->getCamera();
@@ -56,14 +56,14 @@ void Renderer::render(int num_threads, int num_samples, bool display) {
     auto duration = duration_cast<std::chrono::seconds>(end - start);
     std::cout << duration.count() << std::endl;
 
+    imwrite(filename, image);
+
     if (display) {
         namedWindow("render output",cv::WINDOW_AUTOSIZE);
         cv::imshow("render output", image);
         cv::waitKey(0);
         cv::destroyWindow("render output");
     }
-
-    imwrite("render.jpg", image);
 }
 
 Renderer::Renderer(Scene *scene) : scene(scene) {}

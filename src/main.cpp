@@ -15,12 +15,11 @@
 #include <math.h>
 
 int main() {
-//    std::time_t result = std::time(nullptr);
-//    srand(result);
-    srand(14);
 
-//    TestScenes::classicScene();
-    TestScenes::testFresnel();
+    TestScenes::classicScene();
+//    TestScenes::testFresnel();
+//    TestScenes::testFresnelCornell();
+//    TestScenes::testSpecular();
 
     return 0;
 }
