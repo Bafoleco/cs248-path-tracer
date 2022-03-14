@@ -10,7 +10,6 @@ void Diffuse::sampleReflection(BSDFSampleInfo *bsdfSampleInfo, bool flipped_norm
     //randomly sampleReflection direction in hemisphere
     double phi = rand_double() * 2 * PI;
     double theta = acos(rand_double());
-//    Vec3 rand_dir = Vec3(sin(theta) * cos(phi), sin(theta) * sin(phi), cos(theta));
     Vec3 rand_dir = toCartesian(Vec3(theta, phi, 1));
 
     bsdfSampleInfo->incoming = rand_dir;

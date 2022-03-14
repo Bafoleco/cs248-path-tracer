@@ -12,7 +12,7 @@
 class PathIntegrator {
 
 public:
-    static Color sample(Scene *scene, const Ray ray) ;
+    static Color sample(Scene *scene, const Ray& ray) ;
 };
 
 

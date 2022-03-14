@@ -2,11 +2,12 @@
 // Created by Bay Foley-Cox on 3/6/22.
 //
 
+#include <iostream>
 #include "PathIntegrator.h"
 #include "../scene/Scene.h"
 #include "../util.h"
 
-#define MAX_BOUNCES 5
+#define MAX_BOUNCES 8
 
 //TODO verify all path tracing math, particularly use of densities
 
@@ -47,7 +48,7 @@ Light sampleIncomingLight(Scene *scene, Object* object, Vec3 hitPos, Vec3 outgoi
 }
 
 //https://www.pbr-book.org/3ed-2018/Light_Transport_I_Surface_Reflection/Path_Tracing
-Light PathIntegrator::sample(Scene *scene, const Ray initial) {
+Light PathIntegrator::sample(Scene *scene, const Ray& initial) {
 
     hit_info hi = hit_info();
     BSDFSampleInfo incomingSample;
@@ -63,13 +64,18 @@ Light PathIntegrator::sample(Scene *scene, const Ray initial) {
         Object* hit_object = hi.object;
         Vec3 hitPos = ray.posAt(hi.t);
 
-        //Possibly add emitted light at intersection
-
         //End path if necessary
         if(hit_object == nullptr) {
             //we're done
             break;
         }
+
+        //add emitted light if necessary
+        if (bounces == 0 || incomingSample.delta) {
+            Light emittedLight = hit_object->getMaterial(hitPos).getEmittedLight();
+            light += beta.cwiseProduct(emittedLight);
+        }
+
 
         //contribution of this path
         light += beta.cwiseProduct(sampleIncomingLight(scene, hit_object, hitPos, -1 * ray.dir));
@@ -81,7 +87,9 @@ Light PathIntegrator::sample(Scene *scene, const Ray initial) {
         beta = beta.cwiseProduct(incomingSample.reflectivity *
                 std::abs(nextRayDir.dot(hit_object->getNormal(hitPos))) / incomingSample.density);
 
-//        beta /= std::abs(nextRayDir.dot(hit_object->getNormal(hitPos)));
+        if (beta.norm() <= 0.0001) {
+            break;
+        }
 
         ray.pos = hitPos;
         ray.dir = nextRayDir;

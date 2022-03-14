@@ -3,6 +3,7 @@
 //
 
 #include "AreaLight.h"
+#include "../material/Diffuse.h"
 
 bool AreaLight::isDeltaLight() {
     return false;
@@ -23,8 +24,14 @@ void AreaLight::sampleLight(LightSampleInfo *lightSampleInfo, Vec3 pos) {
     lightSampleInfo->intensity = intensity / area;
 }
 
-AreaLight::AreaLight(const Color &color, double intensity, const Plane &plane) : color(color), intensity(intensity),
-                                                                                 plane(plane) {
-
+AreaLight::AreaLight(const Color &color, double intensity, Plane plane) : LightSource(AREA_LIGHT), color(color), intensity(intensity),
+                                                                          plane(plane) {
     area = plane.getArea();
+    auto* diffuse = new Diffuse(Color(0, 0, 0));
+    auto* emissive = new Material(diffuse, color, intensity / area);
+    plane.setMaterial(*emissive);
+}
+
+Plane *AreaLight::getPlane() {
+    return &plane;
 }

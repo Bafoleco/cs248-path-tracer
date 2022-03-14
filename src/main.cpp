@@ -1,25 +1,32 @@
-#include <iostream>
-#include <vector>
-#include "geometry/Object.h"
-#include "scene/Scene.h"
-#include "constants.h"
-#include "geometry/Sphere.h"
-#include "geometry/Triangle.h"
-#include "geometry/Plane.h"
-#include "material/Diffuse.h"
-#include "render/Renderer.h"
-#include "material/Specular.h"
-#include "material/Transparent.h"
-#include "lights/AreaLight.h"
 #include "examples/TestScenes.h"
-#include <math.h>
+
+
+
+void anim1() {
+    int num = 0;
+    std::string base = "anim1/frame_";
+    double centerY = 0.4;
+    for(double lr = 0.4; lr > 0; lr -= 0.01) {
+        TestScenes::classicScene(lr, base + std::to_string(num) + ".jpg", 200, centerY - lr);
+        num++;
+    }
+}
 
 int main() {
 
-    TestScenes::classicScene();
+//    TestScenes::classicScene();
 //    TestScenes::testFresnel();
 //    TestScenes::testFresnelCornell();
 //    TestScenes::testSpecular();
+
+    TestScenes::classicSceneAndFresnel(50);
+
+//    anim1();
+
+//    TestScenes::testSpecular(500);
+//    TestScenes::testExtraSpecular(300);
+//    TestScenes::bigSmall(100);
+
 
     return 0;
 }

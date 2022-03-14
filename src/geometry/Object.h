@@ -19,6 +19,8 @@ public:
     void setPos(const Vec3 &pos);
     Material getMaterial(Vec3 pos);
 
+    void setMaterial(Material &material);
+
     void sampleReflection(BSDFSampleInfo* bsdfSampleInfo, Vec3 &hitPos);
     void getReflectionInfo(BSDFSampleInfo* bsdfSampleInfo, Vec3 &hitPos);
 

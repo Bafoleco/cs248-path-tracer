@@ -11,9 +11,7 @@
 
 double fresnelReflectance(double nI, double nT, double cosThetaI, double cosThetaT) {
     double rParallel = (nT * cosThetaI - nI * cosThetaT) / (nT * cosThetaI + nI * cosThetaT);
-//    double rPerpendicular = (nI * cosThetaI - nT * cosThetaT) / (nI * cosThetaI + nT * cosThetaT);
     double rPerpendicular = (nT * cosThetaT - nI * cosThetaI) / (nI * cosThetaI + nT * cosThetaT);
-
     return (0.5) * (rParallel * rParallel + rPerpendicular * rPerpendicular);
 }
 
@@ -82,17 +80,10 @@ void Fresnel::sampleReflection(BSDFSampleInfo *bsdfSampleInfo, bool flipped_norm
         incoming.cwiseProduct(Vec3(1,1,-1));
     }
 
-    //TESTING
-
-
-
     if (rand_double() < F) {
         //reflect
-//        printf("reflect\n");
         bsdfSampleInfo->incoming = toCartesian(Vec3(outgoingSpherical[0], outgoingSpherical[1] + PI, 1));
-        bsdfSampleInfo->reflectivity = color;
-//        bsdfSampleInfo->reflectivity = Vec3(0,0,0);
-
+        bsdfSampleInfo->reflectivity = reflectionColor;
         bsdfSampleInfo->reflectivity /= std::abs(cos(outgoingSpherical[0]));
         bsdfSampleInfo->density = F;
     } else {
@@ -100,27 +91,17 @@ void Fresnel::sampleReflection(BSDFSampleInfo *bsdfSampleInfo, bool flipped_norm
         Vec3 incomingSpherical = toSpherical(incoming);
         bsdfSampleInfo->incoming = incoming;
 //        bsdfSampleInfo->reflectivity = ((nT * nT) / (nI * nI)) * (1 - F) * color;
-        bsdfSampleInfo->reflectivity = (1 - F) * color;
+        bsdfSampleInfo->reflectivity = (1 - F) * transmissionColor;
 
         bsdfSampleInfo->reflectivity /= std::abs(cos(incomingSpherical[0]));
         bsdfSampleInfo->density = 1 - F;
     }
-
-//
-//    if (sinThetaT > 1) {
-//        bsdfSampleInfo->reflectivity = Vec3(0, 0, 0);
-//    }
-//
-
 }
-
-//Bugs found, incoming cos is different for reflectiviyt and transmission
-
-
 
 void Fresnel::getReflectionInfo(BSDFSampleInfo *bsdfSampleInfo, bool flipped_normal) const {
     bsdfSampleInfo->density = 0;
     bsdfSampleInfo->reflectivity = Color(0, 0, 0);
 }
 
-Fresnel::Fresnel(double ior, const Color &color) : ior(ior), color(color) {}
+Fresnel::Fresnel(double ior, const Color &reflectionColor, const Color &transmissionColor) : ior(ior), reflectionColor(
+        reflectionColor), transmissionColor(transmissionColor) {}

@@ -4,7 +4,7 @@
 
 #include "PointLight.h"
 
-PointLight::PointLight(const Vec3 &pos, const Color &color, double intensity) : pos(pos), color(color),
+PointLight::PointLight(const Vec3 &pos, const Color &color, double intensity) : LightSource(POINT_LIGHT), pos(pos), color(color),
                                                                                 intensity(intensity) {}
 
 void PointLight::sampleLight(LightSampleInfo *lightSampleInfo, Vec3 samplePos) {

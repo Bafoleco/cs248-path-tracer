@@ -86,3 +86,7 @@ const std::string &Object::getName() const {
     return name;
 }
 
+void Object::setMaterial(Material &material) {
+    Object::material = material;
+}
+

@@ -3,3 +3,9 @@
 //
 
 #include "LightSource.h"
+
+LightSourceType LightSource::getLightSourceType() const {
+    return lightSourceType;
+}
+
+LightSource::LightSource(LightSourceType lightSourceType) : lightSourceType(lightSourceType) {}

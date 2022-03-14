@@ -8,6 +8,11 @@
 
 #include "../types.h"
 
+enum LightSourceType {
+    POINT_LIGHT,
+    AREA_LIGHT,
+};
+
 struct LightSampleInfo {
     Vec3 dir;
     Vec3 sourcePos;
@@ -22,6 +27,13 @@ class LightSource {
 public:
     virtual bool isDeltaLight() = 0;
     virtual void sampleLight(LightSampleInfo *lightSampleInfo, Vec3 pos) = 0;
+
+    LightSource(LightSourceType lightSourceType);
+
+    LightSourceType getLightSourceType() const;
+
+private:
+    LightSourceType lightSourceType;
 };
 
 

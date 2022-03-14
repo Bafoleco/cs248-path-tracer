@@ -12,5 +12,6 @@
 #define EPS 0.001
 
 const Vec3 ORIGIN(0, 0, 0);
+const Color WHITE(1, 1, 1);
 
 #endif //PATH_TRACER_CONSTANTS_H

@@ -56,6 +56,8 @@ void Renderer::render(int num_threads, int num_samples, bool display, std::strin
     auto duration = duration_cast<std::chrono::seconds>(end - start);
     std::cout << duration.count() << std::endl;
 
+
+    printf("writing to file: %s\n", filename.c_str());
     imwrite(filename, image);
 
     if (display) {

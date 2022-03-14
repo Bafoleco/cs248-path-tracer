@@ -14,7 +14,7 @@
 
 class Scene {
 public:
-    Scene(const std::vector<Object*> &objects, std::vector<LightSource*> lights, Camera camera);
+    Scene(std::vector<Object *> &objects, std::vector<LightSource*> lights, Camera camera);
 
     const Camera &getCamera() const;
 

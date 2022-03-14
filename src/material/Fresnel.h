@@ -15,11 +15,12 @@ public:
 
     void getReflectionInfo(BSDFSampleInfo *bsdfSampleInfo, bool flipped_normal) const override;
 
-    Fresnel(double ior, const Color &color);
+    Fresnel(double ior, const Color &reflectionColor, const Color &transmissionColor);
 
 private:
     double ior;
-    Color color;
+    Color reflectionColor;
+    Color transmissionColor;
 };
 
 

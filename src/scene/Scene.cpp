@@ -6,6 +6,7 @@
 #include "../render/PathIntegrator.h"
 #include "../util.h"
 #include "../constants.h"
+#include "../lights/AreaLight.h"
 #include<iostream>
 
 void find_closest_hit_r(Bvh* bvh, Ray *ray, hit_info *closest) {
@@ -82,8 +83,14 @@ void Scene::find_closest_hit(Ray *ray, hit_info *closest) {
     find_closest_hit_r(bvh, ray, closest);
 }
 
-Scene::Scene(const std::vector<Object*> &objects, std::vector<LightSource*> lights, Camera camera) :
+Scene::Scene(std::vector<Object *> &objects, std::vector<LightSource*> lights, Camera camera) :
     objects(objects), lights(std::move(lights)), camera(camera) {
+
+    for (auto &l : this->lights) {
+        if (l->getLightSourceType() == AREA_LIGHT) {
+            objects.push_back(((AreaLight *) l)->getPlane());
+        }
+    }
     bvh = new Bvh(objects);
 }
 

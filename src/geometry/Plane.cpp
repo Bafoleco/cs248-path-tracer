@@ -27,7 +27,7 @@ Vec3 Plane::getNormal(Vec3 pos) const {
 
 Plane::Plane(const Vec3 &p0, const Vec3 &p1, const Vec3 &p2, const Vec3 &p3, Material &material, std::string name)
         : Object(Vec3(0, 0, 0), material, name), p0(p0), p1(p1), p2(p2), p3(p3),
-        t1(p0, p1, p2, material), t2(p1, p2, p3, material) {
+        t1(p0, p1, p2, material), t2(p3, p2, p0, material) {
 
     this->setPos((p0 + p1 + p2 + p3)/4);
     Vec3 basis1 = (p1 - p0);
